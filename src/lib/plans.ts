@@ -146,10 +146,11 @@ export function itemsFor(
   const current = all[Math.min(plan.milestone, all.length - 1)];
   const { weekday } = localParts(ctx.now, ctx.tz);
   const items: NewItem[] = [];
-  for (let week = addDays(today, -((weekday + 6) % 7)); week <= localParts(horizon, ctx.tz).date; week = addDays(week, 7)) {
+  // Whole weeks only (every week that starts before the horizon), so a week is never left half planned.
+  for (let week = addDays(today, -((weekday + 6) % 7)); week < localParts(horizon, ctx.tz).date; week = addDays(week, 7)) {
     const busy = [...ctx.busy, ...items.map((i) => ({ start: i.starts_at, end: new Date(i.starts_at.getTime() + i.minutes * 60_000) }))];
     for (const s of placeWeekly(week, p.sessions_per_week, p.minutes, ctx.tz, ctx.blocks, busy, ctx.now)) {
-      if (s <= horizon) items.push({ title: `${plan.title}: ${current.title}`, starts_at: s, minutes: p.minutes });
+      items.push({ title: `${plan.title}: ${current.title}`, starts_at: s, minutes: p.minutes });
     }
   }
   return { items, unplaced: [] };
