@@ -33,3 +33,11 @@ export function reviewDue(now: Date, tz: string): boolean {
   const { weekday, minutes } = localParts(now, tz);
   return weekday === 0 && minutes >= 18 * 60;
 }
+
+/** The save's id when `url` is a link to a note in your Takeaway app (https://<takeaway>/i/<id>), otherwise null. */
+export function takeawayItemId(url: string, takeawayUrl: string | undefined): string | null {
+  if (!takeawayUrl) return null;
+  const base = takeawayUrl.replace(/\/+$/, "");
+  const m = /^\/i\/([0-9a-f-]{36})$/i.exec(url.startsWith(`${base}/`) ? url.slice(base.length) : "");
+  return m ? m[1] : null;
+}

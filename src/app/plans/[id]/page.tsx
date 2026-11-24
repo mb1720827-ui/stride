@@ -37,6 +37,12 @@ async function PlanView({ params, searchParams }: Pick<PageProps<"/plans/[id]">,
   ]);
   if (!plan) notFound();
   const tz = settings.time_zone;
+  // Takeaway saves the Takeaway worker attached to this skill (same Supabase project), when TAKEAWAY_URL is set.
+  const takeawayUrl = process.env.TAKEAWAY_URL?.replace(/\/+$/, "");
+  const { data: saves } =
+    takeawayUrl && plan.kind === "skill"
+      ? await supabase.from("takeaway_items").select("id, title").eq("skill_id", plan.id).order("created_at", { ascending: false }).limit(20)
+      : { data: [] };
   const p = plan.plan as PlanDraft;
   const all = (items ?? []) as (ProgressItem & { id: string; title: string; minutes: number })[];
   const past30 = all.filter((i) => new Date(i.starts_at) <= now && now.getTime() - new Date(i.starts_at).getTime() <= 30 * 86_400_000);
@@ -149,6 +155,20 @@ async function PlanView({ params, searchParams }: Pick<PageProps<"/plans/[id]">,
               </p>
             )}
             {(resources ?? []).length > 0 && <Resources resources={resources ?? []} />}
+            {(saves ?? []).length > 0 && (
+              <div>
+                <h3 className="mb-1 font-medium">From your Takeaway saves</h3>
+                <ul className="flex flex-col gap-1 text-sm">
+                  {(saves ?? []).map((s) => (
+                    <li key={s.id}>
+                      <a href={`${takeawayUrl}/i/${s.id}`} className="underline">
+                        {s.title ?? "A save"}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </>
         )}
       </section>

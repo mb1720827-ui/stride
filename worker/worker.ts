@@ -10,7 +10,7 @@ import { loadSettings, maintain } from "../src/lib/maintain";
 import { Draft, DraftForAI, milestones, Quiz, ResourceList, WeeklyReviewDraft, type DraftT, type SkillPlanT } from "../src/lib/plans";
 import { deliver, sendPush, type DueRow } from "../src/lib/push";
 import { localParts, zoned } from "../src/lib/time";
-import { checkLinks, reviewDue, weekStartOf } from "../src/lib/worker-helpers";
+import { checkLinks, reviewDue, takeawayItemId, weekStartOf } from "../src/lib/worker-helpers";
 
 if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 
@@ -147,13 +147,36 @@ async function findResources(skill: SkillPlanT, claude: string) {
     title: skill.title,
     stages: skill.stages.map((s, i) => ({ stage: i, name: s.name, milestones: s.milestones.map((m) => `${m.title}: ${m.topics.join(", ")}`) })),
     searches: skill.resource_queries,
+    your_saves: await matchingSaves(skill.title),
   };
   const { resources } = await runPlanner(`${prompt("resources-prompt.md")}\n${JSON.stringify(plan, null, 2)}`, ResourceList, { web: true, claude });
   const fetcher = (url: string) =>
     fetch(url, { redirect: "follow", signal: AbortSignal.timeout(10_000), headers: { "User-Agent": "Mozilla/5.0 (compatible; StrideLinkCheck/1.0)" } });
   const checked = await checkLinks(resources, fetcher);
   log(`Resources: ${checked.length} of ${resources.length} links load`);
-  return checked.map((r) => ({ ...r, stage: Math.min(r.stage, skill.stages.length - 1) }));
+  return checked.map((r) => ({
+    ...r,
+    stage: Math.min(r.stage, skill.stages.length - 1),
+    takeaway_item_id: takeawayItemId(r.url, process.env.TAKEAWAY_URL),
+  }));
+}
+
+/** Up to 5 of your Takeaway saves that match the skill, offered to the AI as resources (when Takeaway is set up). */
+async function matchingSaves(skillTitle: string) {
+  const base = process.env.TAKEAWAY_URL?.replace(/\/+$/, "");
+  if (!base) return [];
+  const words = skillTitle.toLowerCase().match(/[a-z0-9+#]{3,}/g) ?? [];
+  const ignore = new Set(["learn", "learning", "get", "better", "become", "good", "for", "and", "the", "how", "want"]);
+  const query = words.filter((w) => !ignore.has(w)).join(" or ");
+  if (!query) return [];
+  const { data, error } = await supabase
+    .from("takeaway_items")
+    .select("id, title, takeaway")
+    .eq("status", "ready")
+    .textSearch("search", query, { type: "websearch", config: "english" })
+    .limit(5);
+  if (error) return [];
+  return (data ?? []).map((s) => ({ title: s.title, takeaway: s.takeaway, url: `${base}/i/${s.id}` }));
 }
 
 async function makeQuiz(req: Request, claude: string) {

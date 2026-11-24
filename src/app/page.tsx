@@ -49,6 +49,11 @@ async function TodayView({ searchParams }: Pick<PageProps<"/">, "searchParams">)
       .limit(10),
     supabase.from("stride_plans").select("id, kind, title, at_risk, level_offer, level_note, level, plan").eq("status", "active"),
   ]);
+  // Due Recall cards from Takeaway (same Supabase project and account), when TAKEAWAY_URL is set.
+  const takeawayUrl = process.env.TAKEAWAY_URL?.replace(/\/+$/, "");
+  const { count: recall } = takeawayUrl
+    ? await supabase.from("takeaway_cards").select("id", { count: "exact", head: true }).lte("due_at", now.toISOString())
+    : { count: 0 };
   const items = (itemData ?? []).map((i) => ({ ...i, plan: Array.isArray(i.plan) ? i.plan[0] : i.plan }));
   const done = items.filter((i) => i.status === "done").length;
   const drafting = (requests ?? []).some((r) => r.status === "queued" || r.status === "processing");
@@ -127,6 +132,15 @@ async function TodayView({ searchParams }: Pick<PageProps<"/">, "searchParams">)
             </section>
           );
         })}
+
+      {takeawayUrl && (recall ?? 0) > 0 && (
+        <a href={`${takeawayUrl}/recall`} className="rounded-2xl bg-emerald-600 p-4 text-white hover:bg-emerald-700">
+          <span className="font-semibold">
+            Recall {recall} {recall === 1 ? "card" : "cards"} in Takeaway ↗
+          </span>
+          <span className="block text-sm text-emerald-100">A few minutes so what you saved sticks.</span>
+        </a>
+      )}
 
       <section className={card}>
         <div className="mb-3 flex items-baseline justify-between">

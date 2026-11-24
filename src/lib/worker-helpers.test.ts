@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checkLinks, reviewDue, weekStartOf } from "./worker-helpers";
+import { checkLinks, reviewDue, takeawayItemId, weekStartOf } from "./worker-helpers";
 import { zoned } from "./time";
 
 const TZ = "Africa/Lagos";
@@ -26,5 +26,15 @@ describe("weekly review timing", () => {
     expect(reviewDue(zoned("2026-11-29", 18 * 60, TZ), TZ)).toBe(true);
     expect(reviewDue(zoned("2026-11-29", 17 * 60 + 59, TZ), TZ)).toBe(false);
     expect(reviewDue(zoned("2026-11-28", 20 * 60, TZ), TZ)).toBe(false);
+  });
+});
+
+describe("takeawayItemId", () => {
+  it("finds the save id in a link to a Takeaway note, and nothing else", () => {
+    const id = "11111111-1111-4111-8111-111111111111";
+    expect(takeawayItemId(`https://takeaway.example/i/${id}`, "https://takeaway.example")).toBe(id);
+    expect(takeawayItemId(`https://takeaway.example/i/${id}`, "https://takeaway.example/")).toBe(id);
+    expect(takeawayItemId(`https://other.example/i/${id}`, "https://takeaway.example")).toBeNull();
+    expect(takeawayItemId(`https://takeaway.example/i/${id}`, undefined)).toBeNull();
   });
 });
