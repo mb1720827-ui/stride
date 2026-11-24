@@ -13,6 +13,22 @@ export interface DueRow {
   auth: string;
 }
 
+// Browsers' push services. Endpoints come from users, so anything else is refused: the server must never be made to
+// send requests to arbitrary hosts (SSRF). The same rule is a CHECK constraint on stride_push_subscriptions.endpoint.
+const PUSH_HOSTS = ["fcm.googleapis.com", "updates.push.services.mozilla.com"];
+const PUSH_HOST_SUFFIXES = [".push.apple.com", ".notify.windows.com"];
+
+export function isPushEndpoint(endpoint: string): boolean {
+  let url: URL;
+  try {
+    url = new URL(endpoint);
+  } catch {
+    return false;
+  }
+  const host = url.hostname.toLowerCase();
+  return url.protocol === "https:" && url.port === "" && !url.username && (PUSH_HOSTS.includes(host) || PUSH_HOST_SUFFIXES.some((s) => host.endsWith(s)));
+}
+
 /** What the service worker (public/sw.js) receives. */
 export function payloadFor(row: DueRow): string {
   return JSON.stringify({ title: row.title, body: row.body, url: row.url, item_id: row.item_id, tag: row.item_id ?? row.kind, actions: row.kind === "item" });
@@ -25,6 +41,10 @@ export async function deliver(rows: DueRow[], send: (row: DueRow) => Promise<unk
   const gone = new Set<string>();
   for (const row of rows) {
     if (gone.has(row.endpoint)) continue;
+    if (!isPushEndpoint(row.endpoint)) {
+      gone.add(row.endpoint);
+      continue;
+    }
     try {
       await send(row);
       sent++;

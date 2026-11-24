@@ -8,7 +8,7 @@ import { aiFor } from "@/lib/auth";
 import { applyCommand, createPlan, retitleUpcoming, setStatus } from "@/lib/create-plan";
 import { loadSettings, maintain } from "@/lib/maintain";
 import { Draft, milestones, Quiz, type PlanDraft, type SkillPlanT } from "@/lib/plans";
-import { sendPush, type DueRow } from "@/lib/push";
+import { isPushEndpoint, sendPush, type DueRow } from "@/lib/push";
 import { freeSlots } from "@/lib/schedule";
 import { addDays, localParts, toMinutes, zoned } from "@/lib/time";
 import { createClient } from "@/lib/supabase/server";
@@ -316,7 +316,11 @@ export async function extendDeadline(formData: FormData) {
 
 // ---------- Push notifications ----------
 
-const Subscription = z.object({ endpoint: z.url().startsWith("https://"), p256dh: z.string().min(10).max(200), auth: z.string().min(8).max(100) });
+const Subscription = z.object({
+  endpoint: z.string().max(1000).refine(isPushEndpoint, "not a browser push service"),
+  p256dh: z.string().min(10).max(200),
+  auth: z.string().min(8).max(100),
+});
 
 export async function savePushSubscription(sub: { endpoint: string; p256dh: string; auth: string }): Promise<FormState> {
   const parsed = Subscription.safeParse(sub);
@@ -340,6 +344,7 @@ export async function sendTestPush(): Promise<FormState> {
   if (!subs?.length) return { error: "Turn on notifications first." };
   let sent = 0;
   for (const s of subs) {
+    if (!isPushEndpoint(s.endpoint)) continue;
     const row: DueRow = { kind: "test", title: "Stride test", body: "Notifications work. Reminders will look like this.", url: "/", item_id: null, ...s };
     await sendPush(row).then(() => sent++).catch(() => undefined);
   }
