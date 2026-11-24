@@ -68,9 +68,21 @@ export async function sendRequest(_prev: FormState, formData: FormData): Promise
 export async function acceptRequest(formData: FormData) {
   const id = Id.parse(formData.get("id"));
   const supabase = await createClient();
-  const { data: req } = await supabase.from("stride_requests").select("id, status, kind, draft").eq("id", id).single();
-  if (!req || req.status !== "ready") redirect(`/requests/${id}`);
-  const draft = Draft.parse(req.draft);
+  // Claim it first (only one ready -> accepted change can succeed), so a double tap can't create the plan twice.
+  const { data: req } = await supabase
+    .from("stride_requests")
+    .update({ status: "accepted", updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .eq("status", "ready")
+    .select("id, draft")
+    .maybeSingle();
+  if (!req) redirect(`/requests/${id}`);
+  const parsed = Draft.safeParse(req.draft);
+  if (!parsed.success) {
+    await supabase.from("stride_requests").update({ status: "failed", error: "This draft couldn't be read. Try again." }).eq("id", id);
+    redirect(`/requests/${id}`);
+  }
+  const draft = parsed.data;
   let planId: string | null = null;
   if (draft.kind === "command") {
     const error = await applyCommand(supabase, draft);
@@ -79,9 +91,14 @@ export async function acceptRequest(formData: FormData) {
       redirect(`/requests/${id}`);
     }
   } else {
-    planId = await createPlan(supabase, draft);
+    try {
+      planId = await createPlan(supabase, draft);
+    } catch (err) {
+      await supabase.from("stride_requests").update({ status: "ready" }).eq("id", id);
+      throw err;
+    }
+    await supabase.from("stride_requests").update({ plan_id: planId }).eq("id", id);
   }
-  await supabase.from("stride_requests").update({ status: "accepted", plan_id: planId, updated_at: new Date().toISOString() }).eq("id", id);
   revalidatePath("/", "layout");
   redirect(planId ? `/plans/${planId}` : "/");
 }
@@ -249,15 +266,21 @@ export async function requestQuiz(formData: FormData) {
 export async function submitQuiz(formData: FormData) {
   const id = Id.parse(formData.get("id"));
   const supabase = await createClient();
-  const { data: req } = await supabase.from("stride_requests").select("plan_id, draft, status").eq("id", id).single();
-  if (!req?.plan_id || req.status !== "ready") redirect("/");
+  // Claim the quiz first so submitting twice can't record two attempts or skip two milestones.
+  const { data: req } = await supabase
+    .from("stride_requests")
+    .update({ status: "accepted", updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .eq("status", "ready")
+    .select("plan_id, draft")
+    .maybeSingle();
+  if (!req?.plan_id) redirect("/");
   const quiz = Quiz.parse(req.draft);
   const answers = quiz.questions.map((_, i) => Number(formData.get(`q${i}`) ?? -1));
   const score = quiz.questions.filter((q, i) => q.answer === answers[i]).length;
   const { data: plan } = await supabase.from("stride_plans").select("title, plan, milestone").eq("id", req.plan_id).single();
   if (!plan) redirect("/");
   await supabase.from("stride_quiz_attempts").insert({ plan_id: req.plan_id, milestone: plan.milestone, questions: quiz, answers, score });
-  await supabase.from("stride_requests").update({ status: "accepted" }).eq("id", id);
 
   const all = milestones(plan.plan as SkillPlanT);
   if (score >= 4) {
