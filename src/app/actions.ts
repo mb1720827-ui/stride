@@ -1,5 +1,6 @@
 "use server";
 
+import { createHash, randomBytes } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -349,4 +350,15 @@ export async function sendTestPush(): Promise<FormState> {
     await sendPush(row).then(() => sent++).catch(() => undefined);
   }
   return sent ? { message: `Sent to ${sent} device${sent === 1 ? "" : "s"}.` } : { error: "The push service didn't accept it. Turn notifications off and on again." };
+}
+
+// ---------- Calendar feed ----------
+
+/** A new private calendar token. Only its hash is stored, so the link is shown once; a new one replaces the old. */
+export async function createCalendarToken(): Promise<string> {
+  const token = randomBytes(32).toString("hex");
+  const supabase = await createClient();
+  await loadSettings(supabase);
+  await supabase.from("stride_settings").update({ calendar_token_hash: createHash("sha256").update(token).digest("hex") }).not("user_id", "is", null);
+  return token;
 }
