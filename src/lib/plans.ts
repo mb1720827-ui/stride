@@ -155,3 +155,8 @@ export function itemsFor(
   }
   return { items, unplaced: [] };
 }
+
+/** What the AI returns when drafting: one plan or command, wrapped in an object (structured output needs an object at the top). */
+export const DraftForAI = z.object({
+  draft: z.discriminatedUnion("kind", [TaskPlan, HabitPlan, SkillPlan.omit({ resources: true }), CommandPlan]),
+});
