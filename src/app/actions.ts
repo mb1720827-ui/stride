@@ -4,9 +4,11 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { aiFor } from "@/lib/auth";
 import { applyCommand, createPlan, retitleUpcoming, setStatus } from "@/lib/create-plan";
 import { loadSettings, maintain } from "@/lib/maintain";
 import { Draft, milestones, Quiz, type PlanDraft, type SkillPlanT } from "@/lib/plans";
+import { sendPush, type DueRow } from "@/lib/push";
 import { freeSlots } from "@/lib/schedule";
 import { addDays, localParts, toMinutes, zoned } from "@/lib/time";
 import { createClient } from "@/lib/supabase/server";
@@ -51,6 +53,11 @@ export async function sendRequest(_prev: FormState, formData: FormData): Promise
   if (text.length < 3) return { error: "Type what you want to do, for example “finish my report by Friday”.", value: text };
   if (text.length > 1000) return { error: "Keep it under 1,000 characters.", value: text };
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  // The worker only ever sees the owner's rows; this just saves other accounts from a request that would never run.
+  if (!aiFor(user?.email)) return { error: "AI planning only runs on the owner's copy for now. Use Quick add.", value: text };
   const { error } = await supabase.from("stride_requests").insert({ text });
   if (error) return { error: "Couldn't send that. Are you signed in?", value: text };
   revalidatePath("/");
@@ -222,6 +229,10 @@ export async function saveSettings(_prev: FormState, formData: FormData): Promis
 export async function requestQuiz(formData: FormData) {
   const id = Id.parse(formData.get("id"));
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!aiFor(user?.email)) redirect(`/plans/${id}`);
   const { data: plan } = await supabase.from("stride_plans").select("title, plan, milestone").eq("id", id).single();
   if (!plan) return;
   const all = milestones(plan.plan as SkillPlanT);
@@ -301,4 +312,36 @@ export async function extendDeadline(formData: FormData) {
   await supabase.from("stride_items").delete().eq("plan_id", id).eq("status", "planned");
   await maintain(supabase);
   revalidatePath("/", "layout");
+}
+
+// ---------- Push notifications ----------
+
+const Subscription = z.object({ endpoint: z.url().startsWith("https://"), p256dh: z.string().min(10).max(200), auth: z.string().min(8).max(100) });
+
+export async function savePushSubscription(sub: { endpoint: string; p256dh: string; auth: string }): Promise<FormState> {
+  const parsed = Subscription.safeParse(sub);
+  if (!parsed.success) return { error: "That browser subscription looks wrong. Try again." };
+  const supabase = await createClient();
+  // A device belongs to whoever subscribed it last.
+  await supabase.from("stride_push_subscriptions").delete().eq("endpoint", parsed.data.endpoint);
+  const { error } = await supabase.from("stride_push_subscriptions").insert(parsed.data);
+  return error ? { error: "Couldn't save. Are you signed in?" } : { message: "Notifications are on for this device." };
+}
+
+export async function deletePushSubscription(endpoint: string): Promise<FormState> {
+  const supabase = await createClient();
+  await supabase.from("stride_push_subscriptions").delete().eq("endpoint", endpoint);
+  return { message: "Notifications are off for this device." };
+}
+
+export async function sendTestPush(): Promise<FormState> {
+  const supabase = await createClient();
+  const { data: subs } = await supabase.from("stride_push_subscriptions").select("endpoint, p256dh, auth");
+  if (!subs?.length) return { error: "Turn on notifications first." };
+  let sent = 0;
+  for (const s of subs) {
+    const row: DueRow = { kind: "test", title: "Stride test", body: "Notifications work. Reminders will look like this.", url: "/", item_id: null, ...s };
+    await sendPush(row).then(() => sent++).catch(() => undefined);
+  }
+  return sent ? { message: `Sent to ${sent} device${sent === 1 ? "" : "s"}.` } : { error: "The push service didn't accept it. Turn notifications off and on again." };
 }
