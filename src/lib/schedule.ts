@@ -31,6 +31,9 @@ function subtract(slot: Slot, busy: Slot[]): Slot[] {
 
 /** Your free time between two instants, minus anything already scheduled, earliest first. */
 export function freeSlots(blocks: FreeBlocks, tz: string, from: Date, to: Date, busy: Slot[]): Slot[] {
+  // Start at a round time (the next quarter hour), not at the exact second the plan was made.
+  const QUARTER = 15 * MIN;
+  from = new Date(Math.ceil(from.getTime() / QUARTER) * QUARTER);
   const slots: Slot[] = [];
   const last = localParts(to, tz).date;
   for (let date = localParts(from, tz).date; date <= last; date = addDays(date, 1)) {

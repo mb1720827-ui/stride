@@ -26,6 +26,11 @@ describe("freeSlots", () => {
     expect(slots.map((s) => `${local(s.start)}-${local(s.end).slice(11)}`)).toEqual(["2026-11-23 18:00-22:00", "2026-11-24 18:00-22:00"]);
   });
 
+  it("starts at the next quarter hour when the range begins inside a free block", () => {
+    const [first] = freeSlots(DEFAULT_FREE_BLOCKS, TZ, new Date(at("2026-11-23", "20:32").getTime() + 47_000), at("2026-11-23", "23:00"), []);
+    expect(local(first.start)).toBe("2026-11-23 20:45");
+  });
+
   it("returns nothing when no free time is set", () => {
     const empty: FreeBlocks = { "0": [], "1": [], "2": [], "3": [], "4": [], "5": [], "6": [] };
     expect(freeSlots(empty, TZ, MON_NOON, FRI_22, [])).toEqual([]);

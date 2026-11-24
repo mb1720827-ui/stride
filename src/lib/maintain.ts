@@ -146,15 +146,35 @@ export function planMaintenance(state: MaintenanceState): Maintenance {
 const ITEM_FIELDS = "id, plan_id, title, starts_at, minutes, status, step, notified_at, done_at";
 const PLAN_FIELDS = "id, kind, title, status, plan, level, milestone, at_risk, remind, level_checked_at";
 
+export interface Settings {
+  time_zone: string;
+  wake: string;
+  sleep: string;
+  quiet_start: string;
+  quiet_end: string;
+  daily_cap: number;
+  free_blocks: FreeBlocks;
+  maintained_at: string | null;
+  calendar_token_hash: string | null;
+}
+
+const DEFAULT_SETTINGS: Settings = {
+  time_zone: "Africa/Lagos",
+  wake: "06:00",
+  sleep: "22:30",
+  quiet_start: "22:30",
+  quiet_end: "06:30",
+  daily_cap: 8,
+  free_blocks: DEFAULT_FREE_BLOCKS,
+  maintained_at: null,
+  calendar_token_hash: null,
+};
+
 /** The user's settings row, created with the defaults the first time. */
-export async function loadSettings(supabase: SupabaseClient) {
+export async function loadSettings(supabase: SupabaseClient): Promise<Settings> {
   await supabase.from("stride_settings").upsert({}, { onConflict: "user_id", ignoreDuplicates: true });
-  const { data } = await supabase.from("stride_settings").select("*").single();
-  return {
-    ...data,
-    time_zone: (data?.time_zone as string) ?? "Africa/Lagos",
-    free_blocks: (data?.free_blocks as FreeBlocks) ?? DEFAULT_FREE_BLOCKS,
-  };
+  const { data } = await supabase.from("stride_settings").select(Object.keys(DEFAULT_SETTINGS).join(", ")).single();
+  return { ...DEFAULT_SETTINGS, ...((data ?? {}) as Partial<Settings>) };
 }
 
 /** Loads the signed-in user's plans and items, applies planMaintenance and saves the result. */
