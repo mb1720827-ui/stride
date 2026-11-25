@@ -1,33 +1,50 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { sendRequest, type FormState } from "./actions";
+import { Icon } from "./icons";
 import { input, primaryButton } from "./ui";
+
+const EXAMPLES = ["Submit my assignment in 3 days", "I want to read every day", "I want to learn SQL for backend development"];
 
 export function ChatBox({ initial }: { initial?: string }) {
   const [state, action, pending] = useActionState<FormState, FormData>(sendRequest, {});
+  const [text, setText] = useState(state.value ?? initial ?? "");
   return (
-    <form action={action} className="flex flex-col gap-2">
-      <label htmlFor="chat" className="font-semibold">
+    <form action={action} className="flex flex-col gap-3">
+      <label htmlFor="chat" className="text-lg font-extrabold">
         What do you want to do?
       </label>
       <textarea
         id="chat"
         name="text"
-        rows={2}
+        rows={3}
         required
-        defaultValue={state.value ?? initial}
-        placeholder="“Finish my project report by Friday”, “I want to read every day” or “I want to learn backend development”"
-        className={`${input} resize-y`}
+        autoFocus
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="A task with a deadline, a habit, or a skill to learn"
+        className={`${input} resize-none leading-relaxed`}
       />
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-xs text-zinc-500">Your laptop drafts a plan. Nothing is added until you accept it.</p>
-        <button disabled={pending} className={primaryButton}>
-          Plan it
-        </button>
-      </div>
-      {state.error && <p role="alert" className="text-sm text-rose-600">{state.error}</p>}
-      {state.message && <p role="status" className="text-sm text-emerald-700 dark:text-emerald-400">{state.message}</p>}
+      {!text && (
+        <div className="flex flex-wrap gap-2" aria-label="Examples">
+          {EXAMPLES.map((e) => (
+            <button key={e} type="button" onClick={() => setText(e)} className="press rounded-full bg-track px-3 py-1.5 text-sm font-semibold hover:bg-track-hover">
+              {e}
+            </button>
+          ))}
+        </div>
+      )}
+      {state.error && (
+        <p role="alert" className="text-sm font-semibold text-risk">
+          {state.error}
+        </p>
+      )}
+      <button disabled={pending} className={primaryButton}>
+        {pending ? "Sending…" : "Plan it"}
+        {!pending && <Icon name="send" className="size-5" />}
+      </button>
+      <p className="text-sm text-muted">Your laptop drafts it in about a minute. You&apos;ll see it on Today.</p>
     </form>
   );
 }

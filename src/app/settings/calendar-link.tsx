@@ -13,8 +13,8 @@ export function CalendarLink({ hasLink }: { hasLink: boolean }) {
       {url ? (
         <>
           <p className="text-sm">Copy this link now. It won&apos;t be shown again.</p>
-          <input readOnly value={url} onFocus={(e) => e.currentTarget.select()} className="w-full rounded-lg border border-zinc-300 bg-zinc-50 px-3 py-2 font-mono text-xs dark:border-zinc-700 dark:bg-zinc-900" />
-          <p className="text-sm text-zinc-500">
+          <input readOnly value={url} onFocus={(e) => e.currentTarget.select()} className="w-full rounded-lg border border-rule bg-ground px-3 py-2 font-mono text-xs" />
+          <p className="text-sm text-muted">
             Google Calendar (on a computer): Other calendars › + › From URL. iPhone: Settings › Calendar › Accounts › Add Subscribed Calendar. Google can
             take a few hours to show changes; Stride itself is always up to date.
           </p>

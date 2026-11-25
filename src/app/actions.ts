@@ -62,7 +62,7 @@ export async function sendRequest(_prev: FormState, formData: FormData): Promise
   const { error } = await supabase.from("stride_requests").insert({ text });
   if (error) return { error: "Couldn't send that. Are you signed in?", value: text };
   revalidatePath("/");
-  return { message: "Got it. Your plan is being drafted." };
+  redirect("/");
 }
 
 export async function acceptRequest(formData: FormData) {
@@ -198,7 +198,7 @@ export async function quickAdd(_prev: FormState, formData: FormData): Promise<Fo
   }
   await createPlan(supabase, draft);
   revalidatePath("/", "layout");
-  return { message: `Added “${q.title}”.` };
+  redirect("/");
 }
 
 // ---------- Settings ----------

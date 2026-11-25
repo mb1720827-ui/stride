@@ -4,7 +4,7 @@ import { deliver, isPushEndpoint, payloadFor, type DueRow } from "./push";
 const row = (endpoint: string, patch: Partial<DueRow> = {}): DueRow => ({
   kind: "item",
   title: "Read 15 pages",
-  body: "15 min · now",
+  body: "15 min ∙ now",
   url: "/",
   item_id: "11111111-1111-4111-8111-111111111111",
   endpoint,

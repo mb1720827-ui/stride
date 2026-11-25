@@ -1,51 +1,56 @@
 import { Suspense } from "react";
 import { requireUser } from "@/lib/auth";
 import { loadSettings } from "@/lib/maintain";
-import { card, Header, Page } from "../ui";
+import { signOut } from "../actions";
+import { Page, panel, quietButton, SectionTitle } from "../ui";
 import { CalendarLink } from "./calendar-link";
 import { PushToggle } from "./push-toggle";
 import { SettingsForm } from "./settings-form";
 
 export default function SettingsPage() {
   return (
-    <Page>
-      <Header />
-      <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
-      <Suspense fallback={<p className="text-zinc-500">Loading…</p>}>
-        <SettingsView />
-      </Suspense>
-    </Page>
+    <Suspense fallback={<Page title="Settings">{null}</Page>}>
+      <SettingsView />
+    </Suspense>
   );
 }
 
 async function SettingsView() {
-  const { supabase } = await requireUser();
+  const { supabase, user } = await requireUser();
   const s = await loadSettings(supabase);
   return (
-    <>
-    <section className={`${card} flex flex-col gap-2`}>
-      <h2 className="font-semibold">Notifications</h2>
-      <p className="text-sm text-zinc-500">A morning brief, a reminder when each thing starts and an evening check-in. Quiet hours and a daily limit keep it calm.</p>
-      <PushToggle publicKey={process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? ""} />
-    </section>
-    <section className={`${card} flex flex-col gap-2`}>
-      <h2 className="font-semibold">Calendar</h2>
-      <p className="text-sm text-zinc-500">See your Stride plan in Google or Apple Calendar with a private link.</p>
-      <CalendarLink hasLink={Boolean(s.calendar_token_hash)} />
-    </section>
-    <section className={card}>
+    <Page title="Settings" guide={user.email}>
+      <section>
+        <SectionTitle>Notifications</SectionTitle>
+        <div className={`${panel} flex flex-col gap-3 p-4`}>
+          <p className="text-sm text-muted">A morning brief, a reminder as each thing starts, and an evening check-in. Quiet hours and a daily limit keep it calm.</p>
+          <PushToggle publicKey={process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? ""} />
+        </div>
+      </section>
+
       <SettingsForm
         values={{
           time_zone: s.time_zone,
-          wake: s.wake ?? "06:00",
-          sleep: s.sleep ?? "22:30",
-          quiet_start: s.quiet_start ?? "22:30",
-          quiet_end: s.quiet_end ?? "06:30",
-          daily_cap: s.daily_cap ?? 8,
+          wake: s.wake,
+          sleep: s.sleep,
+          quiet_start: s.quiet_start,
+          quiet_end: s.quiet_end,
+          daily_cap: s.daily_cap,
           free_blocks: s.free_blocks,
         }}
       />
-    </section>
-    </>
+
+      <section>
+        <SectionTitle>Calendar</SectionTitle>
+        <div className={`${panel} flex flex-col gap-3 p-4`}>
+          <p className="text-sm text-muted">See your Stride plan in Google or Apple Calendar with a private link.</p>
+          <CalendarLink hasLink={Boolean(s.calendar_token_hash)} />
+        </div>
+      </section>
+
+      <form action={signOut} className="flex justify-center">
+        <button className={quietButton}>Sign out</button>
+      </form>
+    </Page>
   );
 }

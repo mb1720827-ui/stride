@@ -1,26 +1,142 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Route Line: Stride's day drawn as a green route. Flat colour only: no gradients, glows or drop shadows. */
+@theme {
+  --color-ground: #f3f6f1;
+  --color-ink: #12261c;
+  --color-muted: #4b6457;
+  --color-rule: #d5e0d9;
+  /* #0B7A45, not the #0E8A4F of the first sketch: white text on it needs 4.5:1 (this is 5.4:1; #0E8A4F was 4.4:1). */
+  --color-brand: #0b7a45;
+  --color-brand-deep: #08603a;
+  --color-track: #dcefe3;
+  --color-on-brand: #e3f5eb;
+  --color-here: #f2c230;
+  --color-risk: #b42318;
+  --color-risk-soft: #fbe9e7;
+  --color-skip: #6f8a7c; /* 3.4:1 on ground: a skipped stop must still read as a mark */
+  --color-field: #7f9688; /* input and choice borders, 3.2:1 on white */
+  --color-track-hover: #cbe6d5;
+
+  --font-sans: var(--font-overpass), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--color-ground);
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-here);
+  color: var(--color-ink);
+}
+
+input,
+textarea {
+  caret-color: var(--color-brand);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.on-brand :focus-visible {
+  outline-color: var(--color-here);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #b9cbbf transparent;
+}
+
+a {
+  text-underline-offset: 3px;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The route line: filled behind you, evenly dashed ahead (a 4px line, 8px dashes every 14px). */
+.line-past {
+  background: var(--color-brand);
+}
+.line-ahead {
+  background: repeating-linear-gradient(to bottom, var(--color-brand) 0 8px, transparent 8px 14px);
+}
+
+/* Anything you press answers the thumb immediately. */
+.press {
+  transition:
+    transform 160ms var(--ease-out),
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+.press:active {
+  transform: scale(0.97);
+}
+
+/* Stop markers fill in as soon as you tap Done. */
+.stop-marker {
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    transform 200ms var(--ease-out);
+}
+.stop-check path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 260ms var(--ease-out) 60ms;
+  @starting-style {
+    stroke-dashoffset: 24;
+  }
+}
+
+/* The one authored moment: the route draws itself down to "you are here" when Today opens. */
+@keyframes route-draw {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+.route-draw {
+  animation: route-draw 520ms var(--ease-out) both;
+}
+
+/* The drafting indicator: a stop travelling along a short line while the laptop works. */
+@keyframes travel {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(var(--track-w, 96px) - 14px));
+  }
+}
+.travel {
+  animation: travel 1400ms var(--ease-drawer) infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-draw,
+  .travel {
+    animation: none;
+  }
+  .stop-marker,
+  .stop-check path {
+    transition: none;
+  }
+  .press:active {
+    transform: none;
+  }
 }

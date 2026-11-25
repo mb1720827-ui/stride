@@ -61,9 +61,9 @@ export function PushToggle({ publicKey }: { publicKey: string }) {
   return (
     <div className="flex flex-col gap-2">
       {status === "unsupported" && (
-        <p className="text-sm text-zinc-500">This browser can&apos;t receive notifications. On iPhone, first add Stride to your home screen (Share › Add to Home Screen).</p>
+        <p className="text-sm text-muted">This browser can&apos;t receive notifications. On iPhone, first add Stride to your home screen (Share › Add to Home Screen).</p>
       )}
-      {status === "blocked" && <p className="text-sm text-amber-700">Notifications are blocked for this site. Allow them in your browser&apos;s site settings.</p>}
+      {status === "blocked" && <p className="text-sm text-risk">Notifications are blocked for this site. Allow them in your browser&apos;s site settings.</p>}
       {status === "off" && (
         <button onClick={turnOn} disabled={busy} className={`${primaryButton} self-start`}>
           Turn on notifications on this device
@@ -79,8 +79,8 @@ export function PushToggle({ publicKey }: { publicKey: string }) {
           </button>
         </div>
       )}
-      {result.error && <p role="alert" className="text-sm text-rose-600">{result.error}</p>}
-      {result.message && <p role="status" className="text-sm text-emerald-700 dark:text-emerald-400">{result.message}</p>}
+      {result.error && <p role="alert" className="text-sm text-risk font-semibold">{result.error}</p>}
+      {result.message && <p role="status" className="text-sm text-brand font-semibold">{result.message}</p>}
     </div>
   );
 }

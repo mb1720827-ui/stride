@@ -1,0 +1,479 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-25T15:01:37+00:00",
+  "title": "Design System: Stride",
+  "extensions": {
+    "colorMeta": {
+      "brand": {
+        "role": "primary",
+        "displayName": "Route Green",
+        "canonical": "#0b7a45",
+        "tonalRamp": [
+          "#050e08",
+          "#032c16",
+          "#004d29",
+          "#05703e",
+          "#35955e",
+          "#6ab987",
+          "#acd7b9",
+          "#e5f3e9"
+        ]
+      },
+      "brand-deep": {
+        "role": "primary",
+        "displayName": "Deep Route Green",
+        "canonical": "#08603a",
+        "tonalRamp": [
+          "#060d09",
+          "#0b2b1a",
+          "#084c2e",
+          "#1f6e47",
+          "#479269",
+          "#75b58f",
+          "#b1d5be",
+          "#e7f2ea"
+        ]
+      },
+      "on-brand": {
+        "role": "primary",
+        "displayName": "Mint Signage",
+        "canonical": "#e3f5eb",
+        "tonalRamp": [
+          "#0a0c0b",
+          "#1f2622",
+          "#37433d",
+          "#52625a",
+          "#75857c",
+          "#9aa9a1",
+          "#c4cdc8",
+          "#ecefee"
+        ]
+      },
+      "here": {
+        "role": "secondary",
+        "displayName": "Danfo Yellow",
+        "canonical": "#f2c230",
+        "tonalRamp": [
+          "#0f0b02",
+          "#2e2200",
+          "#503d01",
+          "#745a04",
+          "#9e7b01",
+          "#c79f23",
+          "#dfc98f",
+          "#f5eedc"
+        ]
+      },
+      "risk": {
+        "role": "tertiary",
+        "displayName": "Signal Red",
+        "canonical": "#b42318",
+        "tonalRamp": [
+          "#150705",
+          "#460a06",
+          "#7d0100",
+          "#ad1a10",
+          "#d74839",
+          "#f87968",
+          "#feb6aa",
+          "#ffe9e5"
+        ]
+      },
+      "risk-soft": {
+        "role": "tertiary",
+        "displayName": "Signal Wash",
+        "canonical": "#fbe9e7",
+        "tonalRamp": [
+          "#0c0b0a",
+          "#292222",
+          "#483c3b",
+          "#695a58",
+          "#8c7c7a",
+          "#afa19f",
+          "#d1c8c7",
+          "#f0eeed"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Forest Ink",
+        "canonical": "#12261c",
+        "tonalRamp": [
+          "#090c0a",
+          "#1d2721",
+          "#33443b",
+          "#4e6458",
+          "#70877a",
+          "#96aa9f",
+          "#c2cec7",
+          "#ecefed"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Sage Grey",
+        "canonical": "#4b6457",
+        "tonalRamp": [
+          "#090c0a",
+          "#1c2721",
+          "#31453b",
+          "#4b6457",
+          "#6d877a",
+          "#94ab9f",
+          "#c1cec7",
+          "#ebf0ed"
+        ]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Tinted Ground",
+        "canonical": "#f3f6f1",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#232423",
+          "#3e403d",
+          "#5c5e5a",
+          "#7e817d",
+          "#a3a5a1",
+          "#c9cbc9",
+          "#eeeeee"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#242424",
+          "#404040",
+          "#5d5d5d",
+          "#808080",
+          "#a4a4a4",
+          "#cacaca",
+          "#eeeeee"
+        ]
+      },
+      "track": {
+        "role": "neutral",
+        "displayName": "Pale Track",
+        "canonical": "#dcefe3",
+        "tonalRamp": [
+          "#0a0c0a",
+          "#1f2622",
+          "#36433b",
+          "#526258",
+          "#74857a",
+          "#9aa99f",
+          "#c4cdc7",
+          "#ecefed"
+        ]
+      },
+      "track-hover": {
+        "role": "neutral",
+        "displayName": "Pressed Track",
+        "canonical": "#cbe6d5",
+        "tonalRamp": [
+          "#090c0a",
+          "#1d2721",
+          "#32453a",
+          "#4c6456",
+          "#6e8778",
+          "#95ab9d",
+          "#c1cec6",
+          "#ebf0ed"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Faint Rule",
+        "canonical": "#d5e0d9",
+        "tonalRamp": [
+          "#0a0b0b",
+          "#212523",
+          "#3a423d",
+          "#57605a",
+          "#79837d",
+          "#9ea7a1",
+          "#c7ccc9",
+          "#edefee"
+        ]
+      },
+      "skip": {
+        "role": "neutral",
+        "displayName": "Skipped Grey",
+        "canonical": "#6f8a7c",
+        "tonalRamp": [
+          "#090c0a",
+          "#1c2721",
+          "#31453b",
+          "#4b6458",
+          "#6d877a",
+          "#94ab9f",
+          "#c1cec7",
+          "#ebf0ed"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Screen title in the green band: the day name, the plan name, \"This week\"."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Title inside the next-stop card; one per screen."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section titles and the chat box question."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text, input values, helper copy."
+      },
+      "body-semibold": {
+        "displayName": "Body Semibold",
+        "purpose": "Stop and row titles: the names you scan down the route."
+      },
+      "body-strong": {
+        "displayName": "Body Strong",
+        "purpose": "Button text, plan titles in lists, terminus and stage names."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Stop times in the time column; all times and counts use tabular figures at 800."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Form labels, guide words in the band, quiet buttons, prompt chips, error text."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "The meta line under a stop or plan, joined with U+2219."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "Default curve: press, marker transform, check stroke, route-draw."
+      },
+      {
+        "name": "ease-drawer",
+        "value": "cubic-bezier(0.32, 0.72, 0, 1)",
+        "purpose": "The travelling dot while a plan drafts."
+      },
+      {
+        "name": "press",
+        "value": "transform 160ms var(--ease-out); :active { transform: scale(0.97) }",
+        "purpose": "Every tappable element answers the thumb; background and border colours also ease over 160ms."
+      },
+      {
+        "name": "marker-fill",
+        "value": "background-color 200ms ease, border-color 200ms ease",
+        "purpose": "A stop's marker changes state the moment Done or Skip is tapped (optimistic)."
+      },
+      {
+        "name": "check-stroke",
+        "value": "stroke-dashoffset 24 -> 0 over 260ms var(--ease-out), 60ms delay, entered via @starting-style",
+        "purpose": "The check draws itself into a done marker."
+      },
+      {
+        "name": "route-draw",
+        "value": "clip-path inset(0 0 100% 0) -> inset(0 0 0 0), 520ms var(--ease-out), both",
+        "purpose": "The one authored moment: Today's route draws itself downward once on open."
+      },
+      {
+        "name": "travel",
+        "value": "translateX(0) -> translateX(calc(var(--track-w, 96px) - 14px)), 1400ms var(--ease-drawer) infinite alternate",
+        "purpose": "The drafting indicator: a yellow stop travelling a short dashed line; the only loop."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "@media (prefers-reduced-motion: reduce) { .route-draw, .travel { animation: none } .press:active { transform: none } }",
+        "purpose": "Reduced motion removes the route-draw, the travelling dot and the press scale."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px",
+        "purpose": "Settings sets form labels in an 8rem column beside their fields."
+      },
+      {
+        "name": "md",
+        "value": "768px",
+        "purpose": "The bottom tab bar becomes a 64px top bar; the band gains 64px top padding."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Route Green, white 800 text; Done, Plan it, Accept and schedule. One per view.",
+      "html": "<button class=\"ds-btn-primary\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7\"/></svg>Done</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 12px; background: var(--color-brand, #0b7a45); color: #fff; padding: 12px 20px; font: 800 1rem/1.5 var(--font-sans, Overpass, ui-sans-serif, system-ui, sans-serif); cursor: pointer; transition: transform 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), background-color 160ms ease; } .ds-btn-primary:hover { background: var(--color-brand-deep, #08603a); } .ds-btn-primary:focus-visible { outline: 3px solid var(--color-brand, #0b7a45); outline-offset: 2px; } .ds-btn-primary:active { transform: scale(0.97); } .ds-btn-primary:disabled { opacity: 0.6; } .ds-btn-primary svg { width: 20px; height: 20px; } @media (prefers-reduced-motion: reduce) { .ds-btn-primary:active { transform: none; } }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Pale Track fill, ink 800 text; Skip, Redraft, Save, Pause.",
+      "html": "<button class=\"ds-btn-secondary\">Skip</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 12px; background: var(--color-track, #dcefe3); color: var(--color-ink, #12261c); padding: 10px 16px; font: 800 1rem/1.5 var(--font-sans, Overpass, ui-sans-serif, system-ui, sans-serif); cursor: pointer; transition: transform 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), background-color 160ms ease; } .ds-btn-secondary:hover { background: #cbe6d5; } .ds-btn-secondary:focus-visible { outline: 3px solid var(--color-brand, #0b7a45); outline-offset: 2px; } .ds-btn-secondary:active { transform: scale(0.97); } .ds-btn-secondary:disabled { opacity: 0.6; } .ds-btn-secondary svg { width: 20px; height: 20px; } @media (prefers-reduced-motion: reduce) { .ds-btn-secondary:active { transform: none; } }"
+    },
+    {
+      "name": "Quiet Button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Unfilled Sage Grey text; Undo, Not yet, and the set-apart Discard and Archive.",
+      "html": "<button class=\"ds-btn-quiet\">Undo</button>",
+      "css": ".ds-btn-quiet { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 12px; background: transparent; color: var(--color-muted, #4b6457); padding: 6px 8px; font: 600 0.875rem/1.4286 var(--font-sans, Overpass, ui-sans-serif, system-ui, sans-serif); cursor: pointer; transition: transform 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), background-color 160ms ease; border-radius: 8px; gap: 6px; } .ds-btn-quiet:hover { background: var(--color-track, #dcefe3); } .ds-btn-quiet:focus-visible { outline: 3px solid var(--color-brand, #0b7a45); outline-offset: 2px; } .ds-btn-quiet:active { transform: scale(0.97); } .ds-btn-quiet:disabled { opacity: 0.6; } .ds-btn-quiet svg { width: 20px; height: 20px; } @media (prefers-reduced-motion: reduce) { .ds-btn-quiet:active { transform: none; } } .ds-btn-quiet:hover { color: var(--color-ink, #12261c); }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "White field, 2px Faint Rule border that turns Route Green on focus; 600 14px label above.",
+      "html": "<label class=\"ds-field\">Task<input class=\"ds-input\" placeholder=\"Submit CSC 401 assignment\"></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; font: 600 0.875rem/1.4286 var(--font-sans, Overpass, ui-sans-serif, system-ui, sans-serif); color: var(--color-ink, #12261c); } .ds-input { box-sizing: border-box; width: 100%; border: 2px solid var(--color-rule, #d5e0d9); border-radius: 12px; background: #fff; padding: 12px 14px; font: 400 1rem/1.5 var(--font-sans, Overpass, ui-sans-serif, system-ui, sans-serif); color: var(--color-ink, #12261c); caret-color: var(--color-brand, #0b7a45); outline: none; transition: border-color 150ms ease; } .ds-input::placeholder { color: var(--color-muted, #4b6457); } .ds-input:focus { border-color: var(--color-brand, #0b7a45); }"
+    },
+    {
+      "name": "Tab Bar",
+      "kind": "nav",
+      "refersTo": "tab-bar",
+      "description": "Phone bottom bar: four tabs and a raised 56px green + cut out by a ground-coloured ring. Becomes a top bar from 768px.",
+      "html": "<nav class=\"ds-tabs\" aria-label=\"Main\"><a class=\"ds-tab\" href=\"#\" aria-current=\"page\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"6\" cy=\"5.5\" r=\"2.5\"/><circle cx=\"6\" cy=\"18.5\" r=\"2.5\"/><path d=\"M6 8v8M11 5.5h9M11 12h6M11 18.5h9\"/></svg>Today</a><a class=\"ds-tab\" href=\"#\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"4\" width=\"17\" height=\"6.5\" rx=\"2\"/><rect x=\"3.5\" y=\"13.5\" width=\"17\" height=\"6.5\" rx=\"2\"/></svg>Plans</a><a class=\"ds-tab-new\" href=\"#\" aria-label=\"Plan something new\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg></a><a class=\"ds-tab\" href=\"#\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 20v-8M12 20V4M19 20v-11\"/></svg>Review</a><a class=\"ds-tab\" href=\"#\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 7h9M17 7h3M4 17h3M11 17h9\"/><circle cx=\"15\" cy=\"7\" r=\"2\"/><circle cx=\"9\" cy=\"17\" r=\"2\"/></svg>Settings</a></nav>",
+      "css": ".ds-tabs { display: flex; align-items: center; margin-top: 28px; padding: 6px 8px 10px; background: #fff; border-top: 1px solid var(--color-rule, #d5e0d9); font-family: var(--font-sans, Overpass, ui-sans-serif, system-ui, sans-serif); } .ds-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 0; border-radius: 12px; font-size: 0.75rem; line-height: 1.333; font-weight: 600; color: var(--color-muted, #4b6457); text-decoration: none; transition: transform 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)); } .ds-tab svg { width: 24px; height: 24px; } .ds-tab:hover { color: var(--color-ink, #12261c); } .ds-tab[aria-current=\"page\"] { color: var(--color-brand, #0b7a45); font-weight: 800; } .ds-tab-new { box-sizing: border-box; display: grid; place-items: center; width: 56px; height: 56px; margin: -28px 8px 0; border: 4px solid var(--color-ground, #f3f6f1); border-radius: 9999px; background: var(--color-brand, #0b7a45); color: #fff; transition: transform 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), background-color 160ms ease; } .ds-tab-new svg { width: 28px; height: 28px; } .ds-tab-new:hover { background: var(--color-brand-deep, #08603a); } .ds-tab:focus-visible, .ds-tab-new:focus-visible { outline: 3px solid var(--color-brand, #0b7a45); outline-offset: 2px; } .ds-tab:active, .ds-tab-new:active { transform: scale(0.97); } @media (prefers-reduced-motion: reduce) { .ds-tab:active, .ds-tab-new:active { transform: none; } }"
+    },
+    {
+      "name": "Now Chip",
+      "kind": "chip",
+      "refersTo": "chip-now",
+      "description": "Danfo Yellow tag holding the current time; the guide words in the green band.",
+      "html": "<p class=\"ds-guide\">Now <span class=\"ds-now-chip\">20:13</span><span class=\"ds-guide-next\">Next 21:00</span></p>",
+      "css": ".ds-guide { margin: 0; padding: 16px 20px; background: var(--color-brand, #0b7a45); color: var(--color-on-brand, #e3f5eb); font: 600 0.875rem/1.4286 var(--font-sans, Overpass, ui-sans-serif, system-ui, sans-serif); } .ds-now-chip { border-radius: 6px; background: var(--color-here, #f2c230); color: var(--color-ink, #12261c); padding: 2px 6px; font-weight: 800; font-variant-numeric: tabular-nums; } .ds-guide-next { margin-left: 12px; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Header Band",
+      "kind": "custom",
+      "refersTo": "header-band",
+      "description": "Every signed-in screen opens on a full-width Route Green band: wordmark or back link, the display title, guide words.",
+      "html": "<header class=\"ds-band\"><span class=\"ds-band-mark\">Stride</span><h1 class=\"ds-band-title\">Wednesday</h1><p class=\"ds-band-guide\">Now <span class=\"ds-band-chip\">20:13</span><span class=\"ds-band-next\">Next 21:00</span></p><p class=\"ds-band-count\">2 of 6 done today</p></header>",
+      "css": ".ds-band { background: var(--color-brand, #0b7a45); color: #fff; padding: 20px 20px 24px; font-family: var(--font-sans, Overpass, ui-sans-serif, system-ui, sans-serif); } .ds-band-mark { color: var(--color-on-brand, #e3f5eb); font-size: 1rem; font-weight: 800; letter-spacing: -0.025em; } .ds-band-title { margin: 12px 0 0; font-size: 2rem; line-height: 1.05; font-weight: 800; letter-spacing: -0.02em; text-wrap: balance; } .ds-band-guide { margin: 12px 0 0; color: var(--color-on-brand, #e3f5eb); font-size: 0.875rem; line-height: 1.4286; font-weight: 600; } .ds-band-chip { border-radius: 6px; background: var(--color-here, #f2c230); color: var(--color-ink, #12261c); padding: 2px 6px; font-weight: 800; font-variant-numeric: tabular-nums; } .ds-band-next { margin-left: 12px; font-variant-numeric: tabular-nums; } .ds-band-count { margin: 6px 0 0; color: var(--color-on-brand, #e3f5eb); font-size: 0.875rem; line-height: 1.4286; font-weight: 400; }"
+    },
+    {
+      "name": "Next Stop Card",
+      "kind": "card",
+      "refersTo": "card-next-stop",
+      "description": "The one bordered card per screen: the next planned stop with a full-width Done and a smaller Skip.",
+      "html": "<div class=\"ds-next\"><a class=\"ds-next-title\" href=\"#\">Write the introduction</a><p class=\"ds-next-meta\">Task ∙ 60 min ∙ step 3 of 4</p><div class=\"ds-next-actions\"><button class=\"ds-next-done\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7\"/></svg>Done</button><button class=\"ds-next-skip\">Skip</button></div></div>",
+      "css": ".ds-next { border: 2px solid var(--color-brand, #0b7a45); border-radius: 16px; background: #fff; padding: 16px; font-family: var(--font-sans, Overpass, ui-sans-serif, system-ui, sans-serif); color: var(--color-ink, #12261c); } .ds-next-title { display: block; color: inherit; text-decoration: none; font-size: 1.25rem; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em; text-wrap: balance; } .ds-next-title:hover { text-decoration: underline; text-underline-offset: 3px; } .ds-next-title:focus-visible { outline: 3px solid var(--color-brand, #0b7a45); outline-offset: 2px; } .ds-next-meta { margin: 4px 0 0; font-size: 0.875rem; line-height: 1.4286; color: var(--color-muted, #4b6457); } .ds-next-actions { display: flex; gap: 10px; margin-top: 16px; } .ds-next-done, .ds-next-skip { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 12px; font: 800 1rem/1.5 var(--font-sans, Overpass, ui-sans-serif, system-ui, sans-serif); cursor: pointer; transition: transform 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), background-color 160ms ease; } .ds-next-done { flex: 1; background: var(--color-brand, #0b7a45); color: #fff; padding: 14px 20px; } .ds-next-done:hover { background: var(--color-brand-deep, #08603a); } .ds-next-done svg { width: 20px; height: 20px; } .ds-next-skip { background: var(--color-track, #dcefe3); color: var(--color-ink, #12261c); padding: 10px 20px; } .ds-next-skip:hover { background: #cbe6d5; } .ds-next-done:focus-visible, .ds-next-skip:focus-visible { outline: 3px solid var(--color-brand, #0b7a45); outline-offset: 2px; } .ds-next-done:active, .ds-next-skip:active { transform: scale(0.97); } @media (prefers-reduced-motion: reduce) { .ds-next-done:active, .ds-next-skip:active { transform: none; } }"
+    },
+    {
+      "name": "Route Stops",
+      "kind": "custom",
+      "refersTo": "marker-planned",
+      "description": "Today's route: 52px time column, 40px rail, content. Solid line behind, dashed ahead; state is the mark on the stop.",
+      "html": "<ol class=\"ds-route\" aria-label=\"Today's route\"><li class=\"ds-stop\"><div class=\"ds-stop-time ds-faded\">07:30</div><div class=\"ds-rail\"><span class=\"ds-stub \"></span><span class=\"ds-marker ds-m-done\" style=\"width:20px;height:20px\"><svg class=\"ds-glyph-check\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7\"/></svg></span><span class=\"ds-line ds-past\"></span></div><div class=\"ds-stop-body\"><div class=\"ds-stop-title ds-faded\">Read 15 pages</div><p class=\"ds-stop-meta \">Habit ∙ 20 min ∙ 3-day streak</p></div></li><li class=\"ds-stop\"><div class=\"ds-stop-time ds-faded\">16:45</div><div class=\"ds-rail\"><span class=\"ds-stub ds-past\"></span><span class=\"ds-marker ds-m-skipped\" style=\"width:24px;height:24px\"><svg class=\"ds-glyph-cross\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6.5 6.5l11 11M17.5 6.5l-11 11\"/></svg></span><span class=\"ds-line ds-past\"></span></div><div class=\"ds-stop-body\"><div class=\"ds-stop-title ds-faded ds-struck\">Backend development: SQL joins</div><p class=\"ds-stop-meta \">Skill ∙ 45 min ∙ milestone 2 of 4</p></div></li><li class=\"ds-stop\"><div class=\"ds-stop-time\">17:45</div><div class=\"ds-rail\"><span class=\"ds-stub ds-past\"></span><span class=\"ds-marker ds-m-missed\" style=\"width:24px;height:24px\"></span><span class=\"ds-line ds-past\"></span></div><div class=\"ds-stop-body\"><div class=\"ds-stop-title\">Outline the report</div><p class=\"ds-stop-meta ds-risk\">Missed ∙ Task ∙ 60 min ∙ step 2 of 4</p></div></li><li class=\"ds-stop\" aria-label=\"Now, 20:13\"><div class=\"ds-stop-time ds-now-cell\"><span class=\"ds-now-chip\">20:13</span></div><div class=\"ds-rail\"><span class=\"ds-stub ds-past\"></span><span class=\"ds-marker ds-m-now\"></span><span class=\"ds-line ds-ahead\"></span></div><div class=\"ds-now-label\">You are here</div></li><li class=\"ds-stop\"><div class=\"ds-stop-time\">22:45</div><div class=\"ds-rail\"><span class=\"ds-stub \"></span><span class=\"ds-marker ds-m-planned\" style=\"width:24px;height:24px\"></span><span class=\"ds-line \"></span></div><div class=\"ds-stop-body\"><div class=\"ds-stop-title\">Backend development: SQL joins</div><p class=\"ds-stop-meta \">Skill ∙ 45 min ∙ milestone 2 of 4</p></div></li></ol>",
+      "css": ".ds-route { list-style: none; margin: 0; padding: 16px; background: var(--color-ground, #f3f6f1); color: var(--color-ink, #12261c); font-family: var(--font-sans, Overpass, ui-sans-serif, system-ui, sans-serif); } .ds-stop { display: grid; grid-template-columns: 52px 40px minmax(0, 1fr); } .ds-stop-time { padding: 6px 4px 0 0; text-align: right; font-size: 15px; line-height: 1.5; font-weight: 800; font-variant-numeric: tabular-nums; } .ds-now-cell { padding-top: 4px; } .ds-rail { display: flex; flex-direction: column; align-items: center; } .ds-stub { width: 4px; height: 8px; } .ds-line { width: 4px; flex: 1; } .ds-past { background: var(--color-brand, #0b7a45); } .ds-ahead { background: repeating-linear-gradient(to bottom, var(--color-brand, #0b7a45) 0 8px, transparent 8px 14px); } .ds-marker { box-sizing: border-box; position: relative; z-index: 1; flex-shrink: 0; display: grid; place-items: center; border: 4px solid; border-radius: 9999px; transition: background-color 200ms ease, border-color 200ms ease; } .ds-m-done { background: var(--color-brand, #0b7a45); border-color: var(--color-brand, #0b7a45); color: #fff; } .ds-m-planned { background: #fff; border-color: var(--color-brand, #0b7a45); } .ds-m-skipped { background: var(--color-ground, #f3f6f1); border-color: var(--color-skip, #6f8a7c); color: var(--color-skip, #6f8a7c); } .ds-m-missed { background: #fff; border-color: var(--color-risk, #b42318); } .ds-m-now { width: 24px; height: 24px; background: var(--color-here, #f2c230); border-color: var(--color-ink, #12261c); } .ds-glyph-check { width: 70%; height: 70%; } .ds-glyph-cross { width: 60%; height: 60%; } .ds-stop-body { min-width: 0; padding: 4px 0 20px 4px; } .ds-stop-title { font-size: 1rem; line-height: 1.375; font-weight: 600; } .ds-stop-meta { margin: 2px 0 0; font-size: 13px; line-height: 1.5; color: var(--color-muted, #4b6457); } .ds-faded { color: var(--color-muted, #4b6457); } .ds-struck { text-decoration: line-through; } .ds-stop-meta.ds-risk { color: var(--color-risk, #b42318); } .ds-now-chip { border-radius: 6px; background: var(--color-here, #f2c230); color: var(--color-ink, #12261c); padding: 2px 6px; font-weight: 800; } .ds-now-label { padding: 6px 0 20px 4px; font-size: 0.875rem; line-height: 1.4286; font-weight: 800; }"
+    },
+    {
+      "name": "Mini Route",
+      "kind": "custom",
+      "refersTo": "marker-done",
+      "description": "A plan's progress in the Plans list: 14px markers spread over a 3px Pale Track line.",
+      "html": "<div class=\"ds-mini\" role=\"img\" aria-label=\"4 of 7 done\"><span class=\"ds-mini-m ds-mini-done\"></span><span class=\"ds-mini-m ds-mini-done\"></span><span class=\"ds-mini-m ds-mini-skipped\"></span><span class=\"ds-mini-m ds-mini-done\"></span><span class=\"ds-mini-m ds-mini-missed\"></span><span class=\"ds-mini-m ds-mini-planned\"></span><span class=\"ds-mini-m ds-mini-planned\"></span></div>",
+      "css": ".ds-mini { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 4px 0; } .ds-mini::before { content: \"\"; position: absolute; left: 4px; right: 4px; top: 50%; height: 3px; transform: translateY(-50%); background: var(--color-track, #dcefe3); } .ds-mini-m { box-sizing: border-box; position: relative; z-index: 1; width: 14px; height: 14px; border: 4px solid; border-radius: 9999px; } .ds-mini-done { background: var(--color-brand, #0b7a45); border-color: var(--color-brand, #0b7a45); } .ds-mini-planned { background: #fff; border-color: var(--color-brand, #0b7a45); } .ds-mini-skipped { background: var(--color-ground, #f3f6f1); border-color: var(--color-skip, #6f8a7c); } .ds-mini-missed { background: #fff; border-color: var(--color-risk, #b42318); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Route Line",
+    "overview": "Stride draws the day as a route. Every task step, habit session and study block is a stop on one 4px green line that runs down the left of the screen: solid behind you, dashed ahead, with a yellow \"you are here\" stop at the current time. The screen always answers two questions at a glance: where am I, and what is next. Plans use the same grammar. A task is a line ending at its deadline terminus, a skill is a line of milestone stations grouped by stage, and a habit is a loop of daily stops. The system refuses the category default of a checkbox list in white cards.\n\nThe material is Lagos route-line signage: a cool green-tinted ground, deep green ink, one Stride green that carries the header band, the line, primary buttons and finished stops, and danfo yellow kept for the present moment. Overpass, a typeface with road-sign lineage, sets everything, with heavy tabular numerals for times. Colour is flat. Depth comes from the green band over the tinted ground and from white panels resting on it, never from shadows.\n\nDensity is calm and thumb-first. Visits last seconds, so hierarchy comes from scale and weight rather than labels: one large day name, one large next-stop title, everything else quiet. State is a mark on the stop, not a badge beside it. Missed stops get a red ring and a plain \"Missed\" note, and nothing scolds. Motion is spare: one authored route-draw when Today opens, and immediate answers to every touch.",
+    "keyCharacteristics": [
+      "One green route per screen; stops carry state as marks (filled, crossed, red ring, green ring).",
+      "Yellow means now: the current time, today, the stop in progress.",
+      "Flat colour on a green-tinted ground; white panels; no shadows.",
+      "Overpass at three weights; tabular times; tracking only ever tightens.",
+      "Single centred column, bottom tab bar on phones, top bar on desktop.",
+      "Spare motion that always gives way to reduced-motion preferences."
+    ],
+    "rules": [
+      {
+        "name": "The Here-and-Now Rule",
+        "body": "Danfo Yellow marks the present moment and nothing else: the current time, today, the stop in progress. Its only other uses are functional, as the focus ring on green and as the selection highlight.",
+        "section": "colors"
+      },
+      {
+        "name": "The White-on-Green Rule",
+        "body": "Text on Route Green is Paper White or Mint Signage only, and the green stays dark enough for white text to clear 4.5:1. Never lighten the brand green toward the sketch's #0E8A4F.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three Weights Rule",
+        "body": "Only 400, 600 and 800 are loaded. 400 is for reading, 600 for names, 800 for anything you act on or scan for: times, titles, buttons.",
+        "section": "typography"
+      },
+      {
+        "name": "The Plain Label Rule",
+        "body": "No eyebrows, kickers, uppercase labels or positive letter-spacing. Tracking only tightens, on display (-0.02em), headline and title (-0.01em) and the wordmark.",
+        "section": "typography"
+      },
+      {
+        "name": "The Centred Dot Rule",
+        "body": "Meta parts are joined by U+2219 \"∙\" with a space either side. Overpass sets the usual middle dot (U+00B7) off-centre, so it is not used.",
+        "section": "typography"
+      },
+      {
+        "name": "The Three Column Rule",
+        "body": "Anything drawn as a route uses the 52px time column, 40px rail column and flexible content column, so lines and markers align from screen to screen.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Colour Rule",
+        "body": "No drop shadows, glows, blurs or smooth gradients. The only gradient in the system is the hard-stop pattern that draws the dashed route ahead, which reads as flat dashes.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Line Is A Background Rule",
+        "body": "The route line is a 4px background strip in the rail column: filled for the past, a hard-stop dash pattern for what is ahead. It is never a border or side stripe on a card or row.",
+        "section": "components"
+      },
+      {
+        "name": "The Set-Apart Rule",
+        "body": "Final or destructive actions (Discard, Archive) are quiet buttons placed away from the primary action: Discard sits centred beneath the draft's Accept and Redraft, and Archive is pushed to the far end of its row.",
+        "section": "components"
+      },
+      {
+        "name": "The One Moment Rule",
+        "body": "The route-draw on Today is the only authored entrance. Every other motion answers a touch (press scale, marker fill, check stroke) or a wait (the travelling dot), and reduced-motion preferences switch off the route-draw, the travelling dot and the press scale.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do draw every sequence of work as stops on one 4px Route Green line: solid behind the current time, dashed ahead (8px dashes every 14px).",
+      "Do show state as a mark on the stop: filled green with a check for done, grey ring and cross for skipped, red ring for missed, green ring for planned.",
+      "Do size stops by length with the fixed ramp (16px, 20px, 24px, 28px at 15, 30, 60 and more minutes) and draw glyphs only at 20px and up.",
+      "Do set every time and count in Overpass 800 with tabular figures.",
+      "Do join meta parts with U+2219 \"∙\" and a space either side: \"Task ∙ 60 min ∙ step 3 of 4\".",
+      "Do keep one next-stop card per screen and let it be the only bordered card.",
+      "Do give every tappable element the press response: scale 0.97 over 160ms, removed under reduced motion.",
+      "Do keep focus visible: a 3px Route Green outline at 2px offset, Danfo Yellow on green surfaces."
+    ],
+    "donts": [
+      "Don't use yellow for anything but the present moment, the focus ring on green and the selection highlight.",
+      "Don't lighten the brand green toward #0E8A4F; white text on it falls to 4.4:1.",
+      "Don't add eyebrow or kicker labels above headings, and don't set uppercase or letter-spaced labels.",
+      "Don't use the U+00B7 middle dot as a separator; it sits off-centre in Overpass.",
+      "Don't draw the route line as a border or coloured side stripe on a card or row.",
+      "Don't add drop shadows, glows, blurs or smooth gradients.",
+      "Don't put state in badges or pills; the marker is the state.",
+      "Don't place Discard or Archive next to the primary action.",
+      "Don't load weights other than 400, 600 and 800, or a second typeface."
+    ]
+  }
+}
