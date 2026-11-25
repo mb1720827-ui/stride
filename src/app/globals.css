@@ -44,13 +44,15 @@ textarea {
   caret-color: var(--color-brand);
 }
 
-:focus-visible {
-  outline: 3px solid var(--color-brand);
-  outline-offset: 2px;
-}
-
-.on-brand :focus-visible {
-  outline-color: var(--color-here);
+/* In the base layer so a component can override it (text boxes show focus with their border instead). */
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+  .on-brand :focus-visible {
+    outline-color: var(--color-here);
+  }
 }
 
 * {
@@ -127,8 +129,24 @@ a {
   animation: travel 1400ms var(--ease-drawer) infinite alternate;
 }
 
+/* While a voice note is recording, a ring breathes out from the microphone. */
+@keyframes listening {
+  from {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+.listening-ring {
+  animation: listening 1200ms var(--ease-out) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .route-draw,
+  .listening-ring,
   .travel {
     animation: none;
   }

@@ -1,15 +1,27 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
+import { appendSpeech, tidyTranscript } from "@/lib/speech";
 import { sendRequest, type FormState } from "./actions";
 import { Icon } from "./icons";
-import { input, primaryButton } from "./ui";
+import { input, primaryButton, quietButton } from "./ui";
+import { VoiceButton } from "./voice-button";
 
 const EXAMPLES = ["Submit my assignment in 3 days", "I want to read every day", "I want to learn SQL for backend development"];
 
 export function ChatBox({ initial }: { initial?: string }) {
   const [state, action, pending] = useActionState<FormState, FormData>(sendRequest, {});
   const [text, setText] = useState(state.value ?? initial ?? "");
+  const [copied, setCopied] = useState(false);
+  // What was in the box before the current voice note, so live words can be shown after it.
+  const spokenBase = useRef("");
+
+  async function copy() {
+    await navigator.clipboard?.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  }
+
   return (
     <form action={action} className="flex flex-col gap-3">
       <label htmlFor="chat" className="text-lg font-extrabold">
@@ -23,9 +35,27 @@ export function ChatBox({ initial }: { initial?: string }) {
         autoFocus
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="A task with a deadline, a habit, or a skill to learn"
+        placeholder="Type it, or tap the microphone and say it"
         className={`${input} resize-none leading-relaxed`}
       />
+      <div className="flex items-center justify-between gap-3">
+        <VoiceButton
+          onStart={() => {
+            spokenBase.current = text;
+          }}
+          onInterim={(live) => setText(appendSpeech(spokenBase.current, live))}
+          onFinal={(phrase) => {
+            spokenBase.current = appendSpeech(spokenBase.current, tidyTranscript(phrase));
+            setText(spokenBase.current);
+          }}
+        />
+        {text.trim() && (
+          <button type="button" onClick={copy} className={`${quietButton} shrink-0`}>
+            <Icon name={copied ? "check" : "copy"} className="size-4" />
+            {copied ? "Copied" : "Copy"}
+          </button>
+        )}
+      </div>
       {!text && (
         <div className="flex flex-wrap gap-2" aria-label="Examples">
           {EXAMPLES.map((e) => (
