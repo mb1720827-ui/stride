@@ -62,6 +62,17 @@ describe("planMaintenance", () => {
     ]);
   });
 
+  it("keeps task steps in order when a missed step is rescheduled before later ones", () => {
+    const plan = taskPlan(at("2026-11-27", "22:00"));
+    plan.plan = { ...plan.plan, steps: [...(plan.plan as { steps: { title: string; minutes: number; optional: boolean }[] }).steps, { title: "Proofread", minutes: 30, optional: false }] } as PlanRow["plan"];
+    const later = item({ step: 2, title: "Proofread", starts_at: at("2026-11-25", "18:00").toISOString(), minutes: 30 });
+    const items = [item({ step: 0, status: "done" }), item({ step: 1, title: "Draft", starts_at: at("2026-11-23", "19:00").toISOString() }), later];
+    const out = planMaintenance({ now: at("2026-11-24", "08:00"), tz: TZ, blocks: DEFAULT_FREE_BLOCKS, plans: [plan], items });
+    const placed = out.insert.map((i) => [i.step, i.starts_at] as const).sort((a, b) => a[1].localeCompare(b[1]));
+    expect(placed.map((p) => p[0])).toEqual([1, 2]);
+    expect(out.remove).toEqual([later.id]);
+  });
+
   it("marks a task at risk when its steps no longer fit before the deadline", () => {
     const items = [item({ step: 0 })];
     const out = planMaintenance({ now: at("2026-11-24", "08:00"), tz: TZ, blocks: DEFAULT_FREE_BLOCKS, plans: [taskPlan(at("2026-11-24", "12:00"))], items });

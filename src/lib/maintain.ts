@@ -50,6 +50,8 @@ export interface MaintenanceState {
 
 export interface Maintenance {
   insert: NewItemRow[];
+  /** Planned items to delete because their step is being placed again (to keep a task's steps in order). */
+  remove: string[];
   markMissed: string[];
   update: { id: string; patch: Partial<Pick<PlanRow, "status" | "level" | "at_risk" | "remind">> & Record<string, unknown> }[];
   retitle: { id: string; title: string }[];
@@ -62,7 +64,7 @@ const mondayOf = (date: string, weekday: number) => addDays(date, -((weekday + 6
 
 export function planMaintenance(state: MaintenanceState): Maintenance {
   const { now, tz, blocks } = state;
-  const out: Maintenance = { insert: [], markMissed: [], update: [], retitle: [] };
+  const out: Maintenance = { insert: [], remove: [], markMissed: [], update: [], retitle: [] };
 
   const items = state.items.map((i) => {
     if (i.status === "planned" && end(i) < now.getTime()) {
@@ -71,13 +73,14 @@ export function planMaintenance(state: MaintenanceState): Maintenance {
     }
     return i;
   });
-  const busy: Slot[] = items
+  const taken: { id?: string; slot: Slot }[] = items
     .filter((i) => i.status === "planned")
-    .map((i) => ({ start: new Date(i.starts_at), end: new Date(end(i)) }));
+    .map((i) => ({ id: i.id, slot: { start: new Date(i.starts_at), end: new Date(end(i)) } }));
+  const busy = (except: Set<string> = new Set()) => taken.filter((t) => !t.id || !except.has(t.id)).map((t) => t.slot);
   const add = (planId: string, generated: { title: string; starts_at: Date; minutes: number; step?: number }[]) => {
     for (const g of generated) {
       out.insert.push({ plan_id: planId, title: g.title, starts_at: g.starts_at.toISOString(), minutes: g.minutes, step: g.step ?? null });
-      busy.push({ start: g.starts_at, end: new Date(g.starts_at.getTime() + g.minutes * 60_000) });
+      taken.push({ slot: { start: g.starts_at, end: new Date(g.starts_at.getTime() + g.minutes * 60_000) } });
     }
   };
 
@@ -85,7 +88,7 @@ export function planMaintenance(state: MaintenanceState): Maintenance {
     if (plan.status !== "active") continue;
     const own = items.filter((i) => i.plan_id === plan.id);
     const patch: Maintenance["update"][number]["patch"] = {};
-    const ctx = { now, tz, blocks, busy, days: DAYS_AHEAD };
+    const ctx = { now, tz, blocks, busy: busy(), days: DAYS_AHEAD };
 
     // Reminders ignored 5 times in a row (nothing done within 2 hours) move into the morning brief.
     const notified = own.filter((i) => i.notified_at).sort((a, b) => b.notified_at!.localeCompare(a.notified_at!)).slice(0, 5);
@@ -99,9 +102,17 @@ export function planMaintenance(state: MaintenanceState): Maintenance {
       if (steps.every((s) => finished.has(s))) {
         Object.assign(patch, { status: "done", at_risk: false });
       } else {
-        const remaining = steps.filter((s) => !finished.has(s) && !scheduled.has(s));
-        if (remaining.length > 0) {
-          const { items: placed, unplaced } = itemsFor(plan, { ...ctx, doneSteps: steps.filter((s) => !remaining.includes(s)) });
+        const first = steps.find((s) => !finished.has(s) && !scheduled.has(s));
+        if (first !== undefined) {
+          // Place every unfinished step from the first unscheduled one onward again, so a rescheduled step never lands after a later one.
+          const redo = steps.filter((s) => s >= first && !finished.has(s));
+          const moved = own.filter((i) => i.status === "planned" && i.step !== null && redo.includes(i.step));
+          out.remove.push(...moved.map((i) => i.id));
+          const { items: placed, unplaced } = itemsFor(plan, {
+            ...ctx,
+            busy: busy(new Set(moved.map((i) => i.id))),
+            doneSteps: steps.filter((s) => !redo.includes(s)),
+          });
           add(plan.id, placed);
           if (unplaced.length > 0 !== plan.at_risk) patch.at_risk = unplaced.length > 0;
         }
@@ -191,6 +202,7 @@ export async function maintain(supabase: SupabaseClient, now = new Date()): Prom
   const out = planMaintenance({ now, tz: settings.time_zone, blocks: settings.free_blocks, plans: (plans ?? []) as PlanRow[], items: (items ?? []) as ItemRow[] });
 
   if (out.markMissed.length > 0) await supabase.from("stride_items").update({ status: "missed" }).in("id", out.markMissed).eq("status", "planned");
+  if (out.remove.length > 0) await supabase.from("stride_items").delete().in("id", out.remove).eq("status", "planned");
   if (out.insert.length > 0) await supabase.from("stride_items").upsert(out.insert, { onConflict: "plan_id,starts_at", ignoreDuplicates: true });
   for (const u of out.update) await supabase.from("stride_plans").update(u.patch).eq("id", u.id);
   for (const r of out.retitle) await supabase.from("stride_items").update({ title: r.title }).eq("id", r.id);
