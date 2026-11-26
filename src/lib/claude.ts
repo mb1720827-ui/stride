@@ -5,6 +5,7 @@ import { existsSync, mkdtempSync, readdirSync, rmSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 import { z } from "zod";
+import { isUsageLimit, loadFallbackEnv } from "./fallback";
 
 /** Claude Code: CLAUDE_BIN, then `claude` on PATH, then the newest copy bundled with the VS Code extension. */
 export function findClaude(): string {
@@ -35,10 +36,12 @@ export async function runPlanner<T>(prompt: string, schema: z.ZodType<T>, opts: 
   const args = ["-p", "--output-format", "json", "--json-schema", JSON.stringify(z.toJSONSchema(schema, { target: "draft-7" })),
     "--allowedTools", opts.web ? "WebSearch,WebFetch" : "Read", "--permission-mode", "dontAsk", "--restricted",
     "--setting-sources", "project", "--strict-mcp-config", "--no-session-persistence"];
-  if (process.env.STRIDE_MODEL) args.push("--model", process.env.STRIDE_MODEL);
-  try {
+
+  // `free` swaps Claude for the free models (see fallback.ts); STRIDE_MODEL names a Claude model, so it only applies to Claude.
+  const attempt = async (free?: Record<string, string>): Promise<T> => {
+    const runArgs = !free && process.env.STRIDE_MODEL ? [...args, "--model", process.env.STRIDE_MODEL] : args;
     const stdout = await new Promise<string>((resolve, reject) => {
-      const child = spawn(opts.claude ?? findClaude(), args, { cwd: dir, stdio: ["pipe", "pipe", "pipe"] });
+      const child = spawn(opts.claude ?? findClaude(), runArgs, { cwd: dir, stdio: ["pipe", "pipe", "pipe"], env: free ? { ...process.env, ...free } : process.env });
       let out = "";
       let err = "";
       const timer = setTimeout(() => child.kill(), 10 * 60_000);
@@ -48,13 +51,28 @@ export async function runPlanner<T>(prompt: string, schema: z.ZodType<T>, opts: 
       child.on("close", (code) => {
         clearTimeout(timer);
         if (code === 0) resolve(out);
-        else reject(new Error(`Claude Code exited with ${code}: ${(err || out).slice(0, 300)}`));
+        else reject(Object.assign(new Error(`Claude Code exited with ${code}: ${(err || out).slice(0, 300)}`), { output: `${err}\n${out}` }));
       });
       child.stdin.end(prompt);
     });
     const result = JSON.parse(stdout);
     if (result.is_error) throw new Error(`Claude Code: ${String(result.result).slice(0, 300)}`);
     return schema.parse(result.structured_output);
+  };
+
+  try {
+    try {
+      return await attempt();
+    } catch (err) {
+      const free = isUsageLimit(String((err as { output?: string }).output ?? err)) ? loadFallbackEnv() : null;
+      if (!free) throw err;
+      console.log(`[${new Date().toLocaleTimeString()}] Claude's usage limit is reached; using the free models (FreeLLMAPI).`);
+      try {
+        return await attempt(free);
+      } catch (freeErr) {
+        throw new Error(`Claude's usage limit is reached, and the free models failed too (is the FreeLLMAPI app open?): ${String(freeErr).slice(0, 300)}`);
+      }
+    }
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

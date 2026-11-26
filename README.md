@@ -66,6 +66,7 @@ The AI only **drafts**. Ordinary, tested TypeScript does the scheduling, resched
    powershell -ExecutionPolicy Bypass -File worker\install-autostart.ps1
    ```
 5. **Phone:** open the app, go to Settings and turn on notifications (on iPhone, add it to the home screen first).
+6. **Free-model fallback (optional):** if Claude Code reports that your Claude usage limit is reached, the worker retries the job on free models through [FreeLLMAPI](https://github.com/tashfeenahmed/freellmapi). Set it up with `npx freellmapi setup-claude --profile free --url http://127.0.0.1:31415` and keep the FreeLLMAPI app open. Free models are weaker, so check the plans they draft.
 
 ## Development
 
