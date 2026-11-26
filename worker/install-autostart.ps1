@@ -7,7 +7,9 @@ $script = Join-Path $PSScriptRoot "start-worker.ps1"
 $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$script`""
 $trigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
 $trigger.Delay = "PT30S" # give Wi-Fi a moment to connect
+# Every 5 minutes: starts the worker again if it has stopped for any reason (a running one is left alone: IgnoreNew).
+$watchdog = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Minutes 5)
 $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit ([TimeSpan]::Zero) -MultipleInstances IgnoreNew
-Register-ScheduledTask -TaskName "Stride worker" -Action $action -Trigger $trigger -Settings $settings `
+Register-ScheduledTask -TaskName "Stride worker" -Action $action -Trigger $trigger, $watchdog -Settings $settings `
   -Description "Drafts Stride plans, quizzes and weekly reviews. Logs: worker.log in the project folder." -Force | Out-Null
-Write-Output "Done: the Stride worker will start automatically when you log in."
+Write-Output "Done: the Stride worker will start automatically when you log in, and restart within 5 minutes if it ever stops."
