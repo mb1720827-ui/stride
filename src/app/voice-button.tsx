@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { keepListening } from "@/lib/speech";
 import { Icon } from "./icons";
 
 // The browser's speech recognition (Chrome on Android sends the audio to Google; Stride never stores it).
@@ -33,7 +34,8 @@ const ERRORS: Record<string, string> = {
 };
 
 /**
- * Tap to speak, tap again (or pause) to stop. Live words go to onInterim; each finished phrase goes to onFinal.
+ * Tap to speak, tap again to stop. Pauses don't stop it: phones end recognition at every pause, so it restarts
+ * until you tap stop or stay silent for a while. Live words go to onInterim; each finished phrase goes to onFinal.
  * Hidden on browsers without speech recognition.
  */
 export function VoiceButton({ onStart, onInterim, onFinal }: { onStart: () => void; onInterim: (text: string) => void; onFinal: (text: string) => void }) {
@@ -42,14 +44,24 @@ export function VoiceButton({ onStart, onInterim, onFinal }: { onStart: () => vo
   const [error, setError] = useState<string | null>(null);
   const rec = useRef<Recognition | null>(null);
   const lang = useRef("en-NG");
+  const stopped = useRef(true);
+  const lastHeardAt = useRef(0);
 
-  useEffect(() => () => rec.current?.abort(), []);
+  useEffect(
+    () => () => {
+      stopped.current = true;
+      rec.current?.abort();
+    },
+    [],
+  );
   if (!supported) return null;
 
+  // Single-phrase sessions (continuous = false) behave the same on every browser; Android's continuous mode repeats words.
   function start(retry = false) {
     const Ctor = recognitionCtor();
     if (!Ctor) return;
     const r = new Ctor();
+    let lastError: string | null = null;
     r.lang = lang.current;
     r.continuous = false;
     r.interimResults = true;
@@ -62,6 +74,7 @@ export function VoiceButton({ onStart, onInterim, onFinal }: { onStart: () => vo
         if (result.isFinal) done += result[0].transcript;
         else live += result[0].transcript;
       }
+      if (done || live) lastHeardAt.current = Date.now();
       if (done) onFinal(done);
       else onInterim(live);
     };
@@ -72,24 +85,45 @@ export function VoiceButton({ onStart, onInterim, onFinal }: { onStart: () => vo
         r.onend = () => start(true);
         return;
       }
+      lastError = e.error;
       if (e.error !== "no-speech" && e.error !== "aborted") setError(ERRORS[e.error] ?? "Couldn't catch that. Try again.");
     };
     r.onend = () => {
-      setListening(false);
       onInterim("");
+      if (keepListening({ stopped: stopped.current, error: lastError, lastHeardAt: lastHeardAt.current, now: Date.now() })) {
+        start(true);
+        return;
+      }
+      stopped.current = true;
+      setListening(false);
     };
     rec.current = r;
-    if (!retry) onStart();
-    setError(null);
+    if (!retry) {
+      onStart();
+      stopped.current = false;
+      lastHeardAt.current = Date.now();
+      setError(null);
+    }
     setListening(true);
-    r.start();
+    try {
+      r.start();
+    } catch {
+      // A phone can refuse an instant restart; finish the note instead of getting stuck "listening".
+      stopped.current = true;
+      setListening(false);
+    }
+  }
+
+  function stop() {
+    stopped.current = true;
+    rec.current?.stop();
   }
 
   return (
     <div className="flex min-w-0 items-center gap-3">
       <button
         type="button"
-        onClick={() => (listening ? rec.current?.stop() : start())}
+        onClick={() => (listening ? stop() : start())}
         aria-pressed={listening}
         aria-label={listening ? "Stop listening" : "Speak instead of typing"}
         className={`press relative grid size-12 shrink-0 place-items-center rounded-full ${listening ? "bg-brand text-white" : "bg-track text-ink hover:bg-track-hover"}`}

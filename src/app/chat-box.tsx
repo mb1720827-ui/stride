@@ -45,7 +45,9 @@ export function ChatBox({ initial }: { initial?: string }) {
           }}
           onInterim={(live) => setText(appendSpeech(spokenBase.current, live))}
           onFinal={(phrase) => {
-            spokenBase.current = appendSpeech(spokenBase.current, tidyTranscript(phrase));
+            // A pause splits one sentence into several phrases; only a new sentence gets a capital.
+            const before = spokenBase.current.trim();
+            spokenBase.current = appendSpeech(spokenBase.current, tidyTranscript(phrase, !before || /[.!?]$/.test(before)));
             setText(spokenBase.current);
           }}
         />
